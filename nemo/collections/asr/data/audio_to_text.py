@@ -670,7 +670,7 @@ class _TarredAudioToTextDataset(IterableDataset):
             def __next__(self):
                 while True:
                     audio_bytes, audio_filename = next(self.iterator)
-                    file_id, _ = os.path.splitext(os.path.basename(audio_filename))
+                    file_id, _ = os.path.splitext(audio_filename)
                     if file_id in self.collection.mapping:
                         return audio_bytes, audio_filename
 
