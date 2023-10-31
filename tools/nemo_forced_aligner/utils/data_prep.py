@@ -706,7 +706,7 @@ def get_batch_variables(
     if not use_buffered_chunked_streaming:
         if not simulate_cache_aware_streaming:
             with torch.no_grad():
-                hypotheses = model.transcribe(audio_filepaths_batch, return_hypotheses=True, batch_size=B)
+                hypotheses = model.transcribe(audio_filepaths_batch, return_hypotheses=True, batch_size=B, channel_selector = "average")
         else:
             with torch.no_grad():
                 hypotheses = model.transcribe_simulate_cache_aware_streaming(

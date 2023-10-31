@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import copy
+import json
 import math
 import os
 from dataclasses import dataclass, field, is_dataclass
@@ -312,6 +313,7 @@ def main(cfg: AlignmentConfig):
     f_manifest_out = open(tgt_manifest_filepath, 'w')
 
     # get alignment and save in CTM batch-by-batch
+    unprocessed_data = []
     for start, end in zip(starts, ends):
         manifest_lines_batch = get_manifest_lines_batch(cfg.manifest_filepath, start, end)
 
@@ -342,8 +344,21 @@ def main(cfg: AlignmentConfig):
             write_manifest_out_line(
                 f_manifest_out, utt_obj,
             )
+        
+        with open(cfg.manifest_filepath, "r", encoding="utf-8-sig") as f:
+            for line_i, line in enumerate(f):
+                if line_i >= start and line_i <= end:
+                    data = json.loads(line)
+                    if "text" in data:
+                        print(data['audio_filepath'])
+                        unprocessed_data.append(data['audio_filepath'])
+
 
     f_manifest_out.close()
+    
+    with open("unproccessed.txt", 'w') as file:
+        for item in unprocessed_data:
+            file.write(item+"\n")
 
     return None
 
